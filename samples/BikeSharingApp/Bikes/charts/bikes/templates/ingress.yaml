@@ -31,12 +31,12 @@ spec:
     - host: {{ . }}
       http:
         paths:
-          - pathType: Prefix
-            path: {{ $ingressPath }}
-            backend:
-              service:
-                name: {{ $fullName }}
-                port: 
-                  number: 80
+        - pathType: Prefix
+          path: {{ $ingressPath }}
+          backend:
+            service:
+              name: {{ $fullName }}
+              port: 
+                number: 80
   {{- end }}
 {{- end }}
