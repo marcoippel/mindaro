@@ -34,9 +34,9 @@ spec:
         - pathType: Prefix
           path: {{ $ingressPath }}
           backend:
-            service: 
+            service:
               name: {{ $fullName }}
-              service: 
-                port: 80
+              port:
+                number: 80          
   {{- end }}
 {{- end }}
