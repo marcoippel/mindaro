@@ -130,7 +130,7 @@ $HELMDIR/helm repo update
 
 echo ""
 echo "helm install traefik ingress controller in $BIKENS $HELMARGS"
-$HELMDIR/helm install "$INGRESSNAME-$BIKENS" stable/traefik \
+echo $HELMDIR/helm install "$INGRESSNAME-$BIKENS" stable/traefik \
    --namespace $BIKENS --create-namespace \
    --set kubernetes.ingressClass=traefik \
    --set fullnameOverride=$INGRESSNAME \
@@ -138,37 +138,37 @@ $HELMDIR/helm install "$INGRESSNAME-$BIKENS" stable/traefik \
    --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
    --version 1.85.0 $HELMARGS
 
-echo ""
-echo "Waiting for BikeSharing ingress Public IP to be assigned..."
-while [ -z "$PUBLICIP" ]; do
-  sleep 5
-  PUBLICIP=$(kubectl get svc -n $BIKENS $INGRESSNAME -o jsonpath={.status.loadBalancer.ingress[0].ip})
-done
-echo ""
-echo "BikeSharing ingress Public IP: " $PUBLICIP
+# echo ""
+# echo "Waiting for BikeSharing ingress Public IP to be assigned..."
+# while [ -z "$PUBLICIP" ]; do
+#   sleep 5
+#   PUBLICIP=$(kubectl get svc -n $BIKENS $INGRESSNAME -o jsonpath={.status.loadBalancer.ingress[0].ip})
+# done
+# echo ""
+# echo "BikeSharing ingress Public IP: " $PUBLICIP
 
-NIPIOFQDN=$PUBLICIP.nip.io
-echo "The Nip.IO FQDN would be " $NIPIOFQDN
+# NIPIOFQDN=$PUBLICIP.nip.io
+# echo "The Nip.IO FQDN would be " $NIPIOFQDN
  
-CHARTDIR="$REPOROOT/samples/BikeSharingApp/charts/"
-echo "---"
-echo "Chart directory: $CHARTDIR"
+# CHARTDIR="$REPOROOT/samples/BikeSharingApp/charts/"
+# echo "---"
+# echo "Chart directory: $CHARTDIR"
 
 
 
-echo "helm install bikesharingapp (average time to install = 4 minutes)"
-$HELMDIR/helm install bikesharingapp "$CHARTDIR" \
-   --set bikesharingweb.ingress.hosts={$BIKENS.bikesharingweb.$NIPIOFQDN} \
-   --set gateway.ingress.hosts={$BIKENS.gateway.$NIPIOFQDN} \
-   --set bikesharingweb.ingress.annotations."kubernetes\.io/ingress\.class"=traefik \
-   --set gateway.ingress.annotations."kubernetes\.io/ingress\.class"=traefik \
-   --dependency-update \
-   --namespace $BIKENS \
-   --timeout 9m \
-   --atomic $HELMARGS
+# echo "helm install bikesharingapp (average time to install = 4 minutes)"
+# $HELMDIR/helm install bikesharingapp "$CHARTDIR" \
+#    --set bikesharingweb.ingress.hosts={$BIKENS.bikesharingweb.$NIPIOFQDN} \
+#    --set gateway.ingress.hosts={$BIKENS.gateway.$NIPIOFQDN} \
+#    --set bikesharingweb.ingress.annotations."kubernetes\.io/ingress\.class"=traefik \
+#    --set gateway.ingress.annotations."kubernetes\.io/ingress\.class"=traefik \
+#    --dependency-update \
+#    --namespace $BIKENS \
+#    --timeout 9m \
+#    --atomic $HELMARGS
 
-echo ""
-echo "To try out the app, open the url:"
-kubectl -n $BIKENS get ing bikesharingweb -o jsonpath='{.spec.rules[0].host}'
-echo ""
+# echo ""
+# echo "To try out the app, open the url:"
+# kubectl -n $BIKENS get ing bikesharingweb -o jsonpath='{.spec.rules[0].host}'
+# echo ""
 
