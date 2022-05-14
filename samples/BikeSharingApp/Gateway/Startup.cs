@@ -8,13 +8,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace app
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -31,15 +33,15 @@ namespace app
         {
             // Add framework services.
             services.AddMvc()
-                .AddJsonOptions(o =>
-                {
-                    o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             services.AddOptions();
 
             // Enable CORS
-            services.AddCors(options => 
+            services.AddCors(options =>
                 options.AddPolicy("MyPolicy", builder =>
                     {
                         builder.AllowAnyHeader()
@@ -48,25 +50,36 @@ namespace app
                     }
                 )
             );
-            
+
             services.Configure<CustomConfiguration>(Configuration.GetSection("CustomConfiguration"));
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+
 
             app.UseMiddleware(typeof(OperationContextMiddleware));
             app.UseMiddleware(typeof(RequestLoggingMiddleware));
             app.UseCors("MyPolicy");
-            app.UseMvc();
+            //app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             lifetime.ApplicationStopping.Register(() =>
             {
                 LogUtility.Log("Graceful shutdown.");
-            });   
+            });
         }
     }
 }
