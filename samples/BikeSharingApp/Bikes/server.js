@@ -159,7 +159,7 @@ app.post('/api/bikes', function (req, res) {
             dbError(res, err, requestID);
             return;
         }
-        
+
         newBike.id = newBike._id;
         delete newBike._id;
         console.log(requestID + ' - inserted new bikeId: ' + newBike.id);
@@ -231,8 +231,6 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         }
 
         var theBike = result;
-        // Hard code image url *FIX ME*
-        theBike.imageUrl = "/static/logo.svg";
         theBike.id = theBike._id;
         delete theBike._id;
 

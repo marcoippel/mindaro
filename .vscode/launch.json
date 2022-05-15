@@ -1,13 +1,9 @@
 {
     "configurations": [
         {
-            "name": "Launch via NPM with Kubernetes",
-            "request": "launch",
-            "runtimeArgs": [
-                "run-script",
-                "debug"
-            ],
-            "runtimeExecutable": "npm",
+            "name": "Attach by Process ID with Kubernetes",
+            "processId": "${command:PickProcess}",
+            "request": "attach",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -18,13 +14,9 @@
             }
         },
         {
-            "name": "Launch via NPM",
-            "request": "launch",
-            "runtimeArgs": [
-                "run-script",
-                "debug"
-            ],
-            "runtimeExecutable": "npm",
+            "name": "Attach by Process ID",
+            "processId": "${command:PickProcess}",
+            "request": "attach",
             "skipFiles": [
                 "<node_internals>/**"
             ],
