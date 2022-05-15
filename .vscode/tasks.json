@@ -4,14 +4,22 @@
 		{
 			"label": "bridge-to-kubernetes.resource",
 			"type": "bridge-to-kubernetes.resource",
-			"resource": "bikes",
+			"resource": "gateway",
 			"resourceType": "service",
 			"ports": [
-				3000
+				5000
 			],
 			"targetCluster": "Bridge2AKS",
 			"targetNamespace": "bikeapp",
 			"useKubernetesServiceEnvironmentVariables": false
+		},
+		{
+			"label": "bridge-to-kubernetes.compound",
+			"dependsOn": [
+				"bridge-to-kubernetes.resource",
+				"build"
+			],
+			"dependsOrder": "sequence"
 		}
 	]
 }

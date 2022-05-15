@@ -129,14 +129,14 @@ $HELMDIR/helm repo add traefik https://helm.traefik.io/traefik
 $HELMDIR/helm repo update
 
 echo ""
-echo "helm install traefik ingress controller in $BIKENS $HELMARGS"
-$HELMDIR/helm install "$INGRESSNAME-$BIKENS" traefik/traefik \
+echo "helm upgrade/install traefik ingress controller in $BIKENS $HELMARGS"
+$HELMDIR/helm upgrade --install "$INGRESSNAME-$BIKENS" traefik/traefik \
    --namespace $BIKENS --create-namespace \
    --set kubernetes.ingressClass=traefik \
    --set fullnameOverride=$INGRESSNAME \
-   --set rbac.enabled=true \
-   --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
-   $HELMARGS
+   # --set rbac.enabled=true \
+   # --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
+   # $HELMARGS
    # --version 1.85.0 
 
 echo ""
