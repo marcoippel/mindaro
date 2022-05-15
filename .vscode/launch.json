@@ -1,40 +1,20 @@
 {
     "configurations": [
         {
-            "name": ".NET Core Launch (Gateway) with Kubernetes",
-            "type": "coreclr",
+            "name": "Launch via NPM with Kubernetes",
             "request": "launch",
-            "preLaunchTask": "bridge-to-kubernetes.compound",
-            "program": "${workspaceFolder}/samples/BikeSharingApp/Gateway/bin/Debug/netcoreapp2.1/app.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
+            "runtimeArgs": [
+                "run-script",
+                "debug"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "preLaunchTask": "bridge-to-kubernetes.resource",
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://+:5000"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/samples/BikeSharingApp/Gateway/Views"
-            }
-        },
-        {
-            "name": ".NET Core Launch (Gateway)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/samples/BikeSharingApp/Gateway/bin/Debug/netcoreapp2.1/app.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/samples/BikeSharingApp/Gateway/Views"
+                "GRPC_DNS_RESOLVER": "native"
             }
         },
         {
@@ -51,5 +31,4 @@
             "type": "node"
         }
     ]
-
 }
